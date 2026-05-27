@@ -19,7 +19,6 @@ public class UserType {
     private String typeName;
 
     @OneToMany(mappedBy = "userType")
-    @OnDelete(action = OnDeleteAction.SET_NULL)
     private Set<User> users;
 
     @Override
@@ -29,4 +28,5 @@ public class UserType {
                 ", typeName='" + typeName + '\'' +
                 '}';
     }
+
 }

@@ -8,8 +8,11 @@ import fr.payenf.fullstack_project.entity.User;
 import fr.payenf.fullstack_project.entity.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -62,11 +65,21 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    @Transactional
     @Override
     public void removeUserType(long id) {
-        Optional<UserType> userType = this.userTypeRepository.findById(id);
-        if (userType.isPresent()) {
+        Optional<UserType> userTypeOpt = this.userTypeRepository.findById(id);
+        if (userTypeOpt.isPresent()) {
+            UserType userType = userTypeOpt.get();
             System.out.println("Removing UserType " + id);
+
+            List<User> users = new ArrayList<>(userType.getUsers());
+            userType.getUsers().clear();
+
+            users.forEach(user -> user.setUserType(null));
+
+            userRepository.saveAll(users);
+
             this.userTypeRepository.deleteById(id);
         } else {
             System.out.println("UserType with " + id + " not found");

@@ -23,6 +23,6 @@ public class User {
     private String email;
 
     @ManyToOne
-    @JoinColumn(name = "type_id")
+    @JoinColumn(name = "type_id", nullable = true)
     private UserType userType;
 }
