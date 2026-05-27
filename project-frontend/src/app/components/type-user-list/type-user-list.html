@@ -4,13 +4,31 @@
 <table class="table table-striped mt-2">
   <thead class="table-primary">
     <tr>
-      <th>id</th>
-      <th>Type user</th>
-      <th>Actions</th>
+      <th class="col-2">
+        @if (sortType() === 'id') {
+          @if (sortDirection() === 'asc') {
+            <i class="fa-solid fa-arrow-down-short-wide"></i>
+          } @else if (sortDirection() === 'desc') {
+            <i class="fa-solid fa-arrow-up-short-wide"></i>
+          }
+        }
+        <button class="btn btn-secondary m-1" (click)="onSort('id')">Id</button>
+      </th>
+      <th class="col-4">
+        @if (sortType() === 'typeName') {
+          @if (sortDirection() === 'asc') {
+            <i class="fa-solid fa-arrow-down-short-wide"></i>
+          } @else if (sortDirection() === 'desc') {
+            <i class="fa-solid fa-arrow-up-short-wide"></i>
+          }
+        }
+        <button class="btn btn-secondary m-1" (click)="onSort('typeName')">Type user</button>
+      </th>
+      <th class="col-4">Actions</th>
     </tr>
   </thead>
   <tbody>
-    @for (tempType of typeUsers(); track $index) {
+    @for (tempType of userTypes(); track $index) {
       <tr>
         <td>{{ tempType.id }}</td>
         <td>{{ tempType.typeName }}</td>
