@@ -1,0 +1,38 @@
+<h2>Add / Edit an User Type</h2>
+<div class="container-fluid text-center">
+  <form [formGroup]="typeUserForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="col-md-2">
+        <input type="text" placeholder="Write the user type" formControlName="typeName" />
+      </div>
+    </div>
+
+    @if ((typeName?.invalid && typeName?.touched) || typeName?.dirty) {
+      <div class="row">
+        @if (typeName?.hasError('required') || typeName?.hasError('notOnlyWhiteSpace')) {
+          <p class="text-danger">Required</p>
+        } @else if (typeName?.hasError('minlength')) {
+          <p class="text-danger">The user type must be at least 2 characters long.</p>
+        } @else if (typeName?.hasError('uniqueTypeName')) {
+          <p class="text-danger">An user type with this name already exists.</p>
+        }
+      </div>
+    }
+
+    <div class="row">
+      <p class="text-info">{{ message() }}</p>
+    </div>
+
+    <div class="row mt-2 justify-content-center">
+      <div class="col-sm-3">
+        <button type="submit" class="btn btn-primary" [disabled]="typeUserForm.invalid">
+          Save
+        </button>
+      </div>
+
+      <div class="col-sm-3">
+        <a class="btn btn-danger" routerLink="/types">Cancel</a>
+      </div>
+    </div>
+  </form>
+</div>
