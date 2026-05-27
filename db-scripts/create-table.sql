@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `full-stack-project`.`user` (
   `first_name` VARCHAR(255) DEFAULT NULL,
   `last_name` VARCHAR(255) DEFAULT NULL,
   `email` VARCHAR(255) NOT NULL UNIQUE,
-  `type_id` BIGINT(20) NOT NULL,
+  `type_id` BIGINT(20),
   PRIMARY KEY (`id`),
   KEY `fk_type` (`type_id`),
   CONSTRAINT `fk_type` FOREIGN KEY (`type_id`) REFERENCES `user_type` (`id`)
