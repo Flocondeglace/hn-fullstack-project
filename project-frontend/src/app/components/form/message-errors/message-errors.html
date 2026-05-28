@@ -1,0 +1,15 @@
+@if ((control().invalid && control().touched) || control().dirty) {
+  <div class="row">
+    @if (control().hasError('required') || control().hasError('notOnlyWhiteSpace')) {
+      <p class="text-danger">Required</p>
+    } @else if (control().hasError('minlength')) {
+      <p class="text-danger">The user type must be at least 2 characters long.</p>
+    } @else if (control().hasError('email')) {
+      <p class="text-danger">The email must be a valid email address : example@example.com</p>
+    } @else if (control().hasError('unique')) {
+      <p class="text-danger">
+        An {{ name() }} with this name ({{ control().value }}) already exists.
+      </p>
+    }
+  </div>
+}

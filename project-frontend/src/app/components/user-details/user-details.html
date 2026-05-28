@@ -1,0 +1,13 @@
+<div class="card text-bg-light border-secondary">
+  <div class="card-header m-2">
+    <h4 class="card-title">{{ user().firstName }} {{ user().lastName }}</h4>
+    <h6 class="card-subtitle mb-2 text-muted">{{ userTypeName() }}</h6>
+  </div>
+  <div class="card-body">
+    <p class="card-text text-start">
+      <strong>Email:</strong> {{ user().email }} <br />
+
+      <a class="btn btn-primary mt-2" routerLink="/user-form/{{ user().id }}">Edit</a>
+    </p>
+  </div>
+</div>

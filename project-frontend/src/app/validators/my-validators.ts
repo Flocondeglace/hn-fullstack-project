@@ -8,10 +8,14 @@ export class MyValidators {
     return null;
   }
 
-  static uniqueTypeNameValidator(names: string[]): ValidatorFn {
+  static uniqueValidator(names: string[], oldName?: string): ValidatorFn {
     return (control: AbstractControl<string>): ValidationErrors | null => {
-      if (control.value != null && names.includes(control.value.trim())) {
-        return { uniqueTypeName: true };
+      if (
+        control.value != null &&
+        control.value != oldName &&
+        names.includes(control.value.trim())
+      ) {
+        return { unique: true };
       }
       return null;
     };

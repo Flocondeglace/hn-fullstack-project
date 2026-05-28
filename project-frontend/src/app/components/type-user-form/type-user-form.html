@@ -6,18 +6,7 @@
         <input type="text" placeholder="Write the user type" formControlName="typeName" />
       </div>
     </div>
-
-    @if ((typeName?.invalid && typeName?.touched) || typeName?.dirty) {
-      <div class="row">
-        @if (typeName?.hasError('required') || typeName?.hasError('notOnlyWhiteSpace')) {
-          <p class="text-danger">Required</p>
-        } @else if (typeName?.hasError('minlength')) {
-          <p class="text-danger">The user type must be at least 2 characters long.</p>
-        } @else if (typeName?.hasError('uniqueTypeName')) {
-          <p class="text-danger">An user type with this name already exists.</p>
-        }
-      </div>
-    }
+    <app-message-errors [control]="typeName!" name="user type"></app-message-errors>
 
     <div class="row">
       <p class="text-info">{{ message() }}</p>

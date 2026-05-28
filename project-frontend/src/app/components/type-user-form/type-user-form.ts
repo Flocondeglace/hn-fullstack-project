@@ -4,10 +4,11 @@ import { UserListTypeService } from '../../services/user-list-type-service';
 import { UserType } from '../../common/user-type';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MyValidators } from '../../validators/my-validators';
+import { MessageErrors } from '../form/message-errors/message-errors';
 
 @Component({
   selector: 'app-type-user-form',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, MessageErrors],
   templateUrl: './type-user-form.html',
   styleUrl: './type-user-form.scss',
 })
@@ -36,11 +37,12 @@ export class TypeUserForm implements OnInit {
 
   ngOnInit(): void {
     this.updateUniqueTypeNameValidator();
-
     this.route.params.subscribe((params) => {
       this.currentUserType.id = +params['id'] || 0;
       this.userListTypeService.getUserType(this.currentUserType.id).subscribe((userType) => {
         this.currentUserType = userType;
+
+        this.updateUniqueTypeNameValidator(this.currentUserType.typeName);
         this.typeUserForm.patchValue({
           typeName: this.currentUserType.typeName,
         });
@@ -76,11 +78,11 @@ export class TypeUserForm implements OnInit {
     this.updateUniqueTypeNameValidator();
   }
 
-  updateUniqueTypeNameValidator() {
+  updateUniqueTypeNameValidator(previousName?: string) {
     this.userListTypeService.getTypeUserList().subscribe((data) => {
       this.nameUsed = data.map((type) => type.typeName || '');
       console.log('Existing user type names: ', this.nameUsed);
-      this.typeName?.addValidators(MyValidators.uniqueTypeNameValidator(this.nameUsed));
+      this.typeName?.addValidators(MyValidators.uniqueValidator(this.nameUsed, previousName));
     });
   }
 }

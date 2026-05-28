@@ -1,0 +1,50 @@
+<h2>Add / Edit an User</h2>
+<div class="container-fluid text-center">
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="col-md-2">
+        <input type="text" placeholder="Last Name" formControlName="lastName" />
+      </div>
+    </div>
+
+    <app-message-errors [control]="lastName!"></app-message-errors>
+
+    <div class="row">
+      <div class="col-md-2">
+        <input type="text" placeholder="First Name" formControlName="firstName" />
+      </div>
+    </div>
+
+    <app-message-errors [control]="firstName!"></app-message-errors>
+
+    <div class="row">
+      <div class="col-md-2">
+        <input type="text" placeholder="Email" formControlName="email" />
+      </div>
+    </div>
+
+    <app-message-errors [control]="email!" name="email"></app-message-errors>
+
+    <div class="row">
+      <div class="col-md-2">
+        <select class="form-select form-select-sm" formControlName="userType">
+          @for (tempType of userTypes(); track $index) {
+            <option [value]="tempType.id">{{ tempType.typeName }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <app-message-errors [control]="userType!"></app-message-errors>
+
+    <div class="row mt-2 justify-content-center">
+      <div class="col-sm-3">
+        <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid">Save</button>
+      </div>
+
+      <div class="col-sm-3">
+        <a class="btn btn-danger" routerLink="/users">Cancel</a>
+      </div>
+    </div>
+  </form>
+</div>
