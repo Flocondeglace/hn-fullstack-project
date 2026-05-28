@@ -1,9 +1,16 @@
 <h2>Add / Edit an User Type</h2>
 <div class="container-fluid text-center">
   <form [formGroup]="typeUserForm" (ngSubmit)="onSubmit()">
-    <div class="row">
-      <div class="col-md-2">
-        <input type="text" placeholder="Write the user type" formControlName="typeName" />
+    <div class="form-group row mt-5">
+      <label for="typeName" class="col-sm-4 col-form-label">User Type</label>
+      <div class="col-sm-8">
+        <input
+          type="text"
+          id="typeName"
+          placeholder="User Type"
+          formControlName="typeName"
+          class="form-control"
+        />
       </div>
     </div>
     <app-message-errors [control]="typeName!" name="user type"></app-message-errors>

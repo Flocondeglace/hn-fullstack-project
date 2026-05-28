@@ -67,14 +67,15 @@ export class UserForm implements OnInit {
       console.log('User types loaded: ', this.userTypes());
     });
 
-    this.updateUniqueMailValidator();
+    //this.updateUniqueMailValidator();
 
     this.route.params.subscribe((params) => {
       console.log('Route params: ', params);
       this.currentUser.id = +params['id'] || 0;
       this.userListService.getUser(this.currentUser.id).subscribe((user) => {
         this.currentUser = user;
-
+        console.log('Current user id loaded: ', this.currentUser.id);
+        console.log('here');
         this.updateUniqueMailValidator(user.email);
         this.userForm.patchValue({
           lastName: this.currentUser.lastName,
@@ -102,7 +103,13 @@ export class UserForm implements OnInit {
         console.log('User added successfully: ', response);
 
         this.message.set(`User "${response.firstName} ${response.lastName}" added successfully!`);
-        this.reset();
+        console.log('current user id after submit: ', this.currentUser.id);
+
+        // When updating existing user, keep the form values on save, else reset the form for new user
+        this.userForm.markAsPristine();
+        if (this.currentUser.id == 0) {
+          this.reset();
+        }
       },
       error: (error) => {
         this.message.set(
@@ -111,8 +118,6 @@ export class UserForm implements OnInit {
         console.error('Error adding user: ', error);
       },
     });
-
-    this.currentUser.id = 0;
   }
 
   reset() {
@@ -124,6 +129,7 @@ export class UserForm implements OnInit {
     this.userListService.getUserList().subscribe((data) => {
       let emailUsed = data.map((user) => user.email || '');
       console.log('Existing user with mail: ', emailUsed);
+      this.email?.setValidators([Validators.required, Validators.email]);
       this.email?.addValidators(MyValidators.uniqueValidator(emailUsed, previousEmail));
     });
   }

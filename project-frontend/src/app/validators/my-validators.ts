@@ -10,6 +10,14 @@ export class MyValidators {
 
   static uniqueValidator(names: string[], oldName?: string): ValidatorFn {
     return (control: AbstractControl<string>): ValidationErrors | null => {
+      console.log(
+        'Validating unique value: ',
+        control.value,
+        ' against names: ',
+        names,
+        ' oldName: ',
+        oldName,
+      );
       if (
         control.value != null &&
         control.value != oldName &&
