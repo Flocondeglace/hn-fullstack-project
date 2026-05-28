@@ -2,16 +2,17 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, OnInit, signal, WritableSignal } from '@angular/core';
 import { UserType } from '../common/user-type';
 import { catchError, map, Observable } from 'rxjs';
+import { environment } from '../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserListTypeService {
-  private typeListUrl = 'http://localhost:8080/api/userTypes';
+  private typeListUrl = `${environment.apiUrl}/userTypes`;
 
-  private addTypeUrl = 'http://localhost:8080/api/create-type';
+  private addTypeUrl = `${environment.apiUrl}/create-type`;
 
-  private deleteTypeUrl = 'http://localhost:8080/api/delete-type';
+  private deleteTypeUrl = `${environment.apiUrl}/delete-type`;
 
   constructor(private httpClient: HttpClient) {}
 

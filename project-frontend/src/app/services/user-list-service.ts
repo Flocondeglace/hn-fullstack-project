@@ -3,18 +3,19 @@ import { UserType } from '../common/user-type';
 import { map, Observable } from 'rxjs';
 import { User } from '../common/user';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserListService {
-  private userListUrl = 'http://localhost:8080/api/user-list';
+  private userListUrl = `${environment.apiUrl}/user-list`;
 
-  private userUrl = 'http://localhost:8080/api/get-user';
+  private userUrl = `${environment.apiUrl}/get-user`;
 
-  private addUserUrl = 'http://localhost:8080/api/create-user';
+  private addUserUrl = `${environment.apiUrl}/create-user`;
 
-  private deleteUserUrl = 'http://localhost:8080/api/delete-user';
+  private deleteUserUrl = `${environment.apiUrl}/delete-user`;
 
   constructor(private httpClient: HttpClient) {}
 

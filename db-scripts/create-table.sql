@@ -1,6 +1,6 @@
-DROP SCHEMA IF EXISTS `full-stack-project`;
+DROP SCHEMA IF EXISTS `fullstack_project`;
 
-CREATE SCHEMA `full-stack-project`;
+CREATE SCHEMA `fullstack_project`;
 USE `full-stack-project` ;
 
 -- User Type table

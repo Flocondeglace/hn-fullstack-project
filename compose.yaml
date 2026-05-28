@@ -1,0 +1,30 @@
+services:
+  db:
+    image: mysql:8.4
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: fullstack_project
+      MYSQL_USER: fullstack-user
+      MYSQL_PASSWORD: password
+    volumes:
+      - ./db-scripts/create-tables.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_data:/var/lib/mysql
+
+  backend:
+    build: fullstack-project-backend/.
+    ports:
+      - "8090:8080"
+    depends_on:
+      - db
+
+  frontend:
+    build: project-frontend/.
+    ports:
+      - "4200:4200"
+    depends_on:
+      - db
+      - backend
+volumes:
+  db_data:
