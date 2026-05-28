@@ -28,15 +28,11 @@ export class UserListTypeService {
   }
 
   addUserType(userType: UserType): Observable<any> {
-    console.log('Adding User Type: ', userType);
-    console.log('POST URL: ', this.addTypeUrl);
-
     return this.httpClient.post<UserType>(this.addTypeUrl, userType);
   }
 
   removeUserType(id: number): Observable<UserType> {
     const url = `${this.deleteTypeUrl}/${id}`;
-    console.log('DELETE URL: ', url);
     return this.httpClient.delete<UserType>(url);
   }
 }

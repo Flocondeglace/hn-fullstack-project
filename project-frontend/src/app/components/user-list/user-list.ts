@@ -12,7 +12,6 @@ import { SortService } from '../../services/sort-service';
   selector: 'app-user-list',
   imports: [RouterLink, ThSortable],
   templateUrl: './user-list.html',
-  styleUrl: './user-list.scss',
 })
 export class UserList implements OnInit {
   sortType: WritableSignal<SortType> = signal<SortType>('userTypeName');
@@ -45,7 +44,7 @@ export class UserList implements OnInit {
 
   updateList(): void {
     this.userListService.getUserList().subscribe((data) => {
-      console.log(data);
+      console.info('Retrieved users: ', data);
       this.users.set(data);
     });
     this.sortBy();
@@ -57,13 +56,13 @@ export class UserList implements OnInit {
 
   removeUser(id: number): void {
     this.userListService.removeUser(id).subscribe((data) => {
-      console.log(data);
+      console.info('User removed successfully: ', data);
       this.updateList();
     });
   }
 
   onSort(type: SortType) {
-    const { sortType, sortDirection } = this.sortService.onSort(
+    const { sortType, sortDirection } = this.sortService.updateSortParameters(
       type,
       this.sortType(),
       this.sortDirection(),
@@ -74,7 +73,6 @@ export class UserList implements OnInit {
   }
 
   private sortBy() {
-    console.log('Sorting by: ', this.sortType(), 'Direction: ', this.sortDirection());
     this.users.set(this.sortService.sortBy(this.sortType(), this.sortDirection(), this.users()));
   }
 }

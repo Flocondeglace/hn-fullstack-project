@@ -25,7 +25,7 @@ export class UserDetails implements OnInit {
       let userId = +params['id'] || 0;
       this.userListService.getUser(userId).subscribe((user) => {
         this.user.set(user);
-        console.log('User details: ', user);
+        console.info('User details: ', user);
         this.userListTypeService.getUserType(user.userTypeId!).subscribe((userType) => {
           this.userTypeName.set(userType.typeName || '');
         });

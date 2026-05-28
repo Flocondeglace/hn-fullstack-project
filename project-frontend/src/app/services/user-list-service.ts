@@ -20,12 +20,7 @@ export class UserListService {
   constructor(private httpClient: HttpClient) {}
 
   getUserList(): Observable<User[]> {
-    return this.httpClient.get<User[]>(this.userListUrl).pipe(
-      map((response) => {
-        console.log('Response from getUserList: ', response);
-        return response;
-      }),
-    );
+    return this.httpClient.get<User[]>(this.userListUrl);
   }
 
   getUser(id: number): Observable<User> {
@@ -34,15 +29,11 @@ export class UserListService {
   }
 
   addUser(user: User): Observable<any> {
-    console.log('Adding User: ', user);
-    console.log('POST URL: ', this.addUserUrl);
-
     return this.httpClient.post<User>(this.addUserUrl, user);
   }
 
   removeUser(id: number): Observable<User> {
     const url = `${this.deleteUserUrl}/${id}`;
-    console.log('DELETE URL: ', url);
     return this.httpClient.delete<User>(url);
   }
 }

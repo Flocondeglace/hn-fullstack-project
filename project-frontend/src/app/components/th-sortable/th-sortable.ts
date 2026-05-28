@@ -5,7 +5,6 @@ import { SortDirection, SortType } from '../../common/sort';
   selector: 'th[app-sortable]',
   imports: [],
   templateUrl: './th-sortable.html',
-  styleUrl: './th-sortable.scss',
 })
 export class ThSortable {
   currentSortDirection = input.required<SortDirection>();

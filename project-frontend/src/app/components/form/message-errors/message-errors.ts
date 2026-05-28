@@ -6,7 +6,6 @@ import { AbstractControl } from '@angular/forms';
   standalone: true,
   imports: [],
   templateUrl: './message-errors.html',
-  styleUrl: './message-errors.scss',
 })
 export class MessageErrors {
   control = input.required<AbstractControl>();

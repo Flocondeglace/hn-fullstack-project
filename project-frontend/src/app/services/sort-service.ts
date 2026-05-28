@@ -6,14 +6,13 @@ import { User } from '../common/user';
   providedIn: 'root',
 })
 export class SortService {
-  onSort(
+  updateSortParameters(
     type: SortType,
     currentSortType: SortType,
     currentSortDirection: SortDirection,
   ): { sortType: SortType; sortDirection: SortDirection } {
     let newSortDirection: SortDirection = 'asc';
     let newSortType: SortType = type;
-    console.log('Sorting by: ', type);
 
     if (currentSortType === type) {
       newSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
@@ -23,7 +22,7 @@ export class SortService {
   }
 
   sortBy(sortType: SortType, sortDirection: SortDirection, toSort: any[]): any[] {
-    console.log('Sorting by: ', sortType, 'Direction: ', sortDirection);
+    console.info('Sorting by:', sortType, ', Direction: ', sortDirection);
     let sortedValues = [...toSort];
     const direction = sortDirection === 'asc' ? 1 : -1;
     Object.values(SortTypeEnum).forEach((t) => {
@@ -40,8 +39,6 @@ export class SortService {
         });
       }
     });
-    console.log('Sorted: ', sortedValues);
-
     return sortedValues;
   }
 }
