@@ -1,5 +1,6 @@
 package fr.payenf.fullstack_project.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.OnDelete;
@@ -19,6 +20,7 @@ public class UserType {
     private String typeName;
 
     @OneToMany(mappedBy = "userType")
+    @JsonIgnore
     private Set<User> users;
 
     @Override

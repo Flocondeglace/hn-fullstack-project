@@ -1,5 +1,6 @@
 package fr.payenf.fullstack_project.config;
 
+import fr.payenf.fullstack_project.entity.User;
 import fr.payenf.fullstack_project.entity.UserType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +15,7 @@ public class DataRestConfig implements RepositoryRestConfigurer {
 
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors) {
-        config.exposeIdsFor(UserType.class);
+        config.exposeIdsFor(UserType.class, User.class);
         cors.addMapping(config.getBasePath()+"/**").allowedOrigins(allowedOrigins);
     }
 }

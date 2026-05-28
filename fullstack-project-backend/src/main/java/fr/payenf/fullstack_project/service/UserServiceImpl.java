@@ -11,9 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -27,9 +25,37 @@ public class UserServiceImpl implements UserService{
         this.userTypeRepository = userTypeRepository;
     }
 
+    private UserInfo userToUserInfo(User user) {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setId(user.getId());
+        if (user.getUserType() != null) {
+            userInfo.setUserTypeId(user.getUserType().getId());
+        }
+        userInfo.setEmail(user.getEmail());
+        userInfo.setFirstName(user.getFirstName());
+        userInfo.setLastName(user.getLastName());
+        return userInfo;
+    }
+
     @Override
-    public void saveUser(UserInfo userInfo) {
-        System.out.println("here");
+    public UserInfo getUser(long id) {
+        User user = this.userRepository.getReferenceById(id);
+        return userToUserInfo(user);
+    }
+
+    @Override
+    public Set<UserInfo> getAllUsers() {
+        Set<UserInfo> userInfos = new HashSet<>();
+        this.userRepository.findAll().forEach(user -> {
+            UserInfo userInfo = this.userToUserInfo(user);
+            userInfos.add(userInfo);
+        });
+        return userInfos;
+    }
+
+    @Override
+    public User saveUser(UserInfo userInfo) {
+        System.out.println("Saving user" +  userInfo);
         User user = new User();
         if (userInfo.getId() != null) {
             user = this.userRepository.findById(userInfo.getId()).orElse(new User());
@@ -37,9 +63,32 @@ public class UserServiceImpl implements UserService{
         user.setFirstName(userInfo.getFirstName());
         user.setLastName(userInfo.getLastName());
         user.setEmail(userInfo.getEmail());
-        UserType userType = this.userTypeRepository.findByTypeName(user.getUserType().getTypeName());
+        UserType userType = null;
+        if (userInfo.getUserTypeId() != null) {
+            userType = this.userTypeRepository.findById(userInfo.getUserTypeId()).orElse(null);
+        }
         user.setUserType(userType);
-        this.userRepository.save(user);
+        System.out.println("Saving " +  userType);
+        return  this.userRepository.save(user);
+    }
+
+    @Override
+    public void removeUser(long id) {
+        Optional<User> userOpt = this.userRepository.findById(id);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            System.out.println("Removing UserType " + id);
+            UserType userType = user.getUserType();
+            if (userType != null) {
+                userType.getUsers().remove(user);
+            }
+
+            userRepository.save(user);
+
+            this.userRepository.deleteById(id);
+        } else {
+            System.out.println("UserType with " + id + " not found");
+        }
     }
 
     @Override
