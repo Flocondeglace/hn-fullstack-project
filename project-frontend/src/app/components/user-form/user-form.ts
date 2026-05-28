@@ -100,10 +100,15 @@ export class UserForm implements OnInit {
 
     this.userListService.addUser(this.currentUser).subscribe({
       next: (response) => {
-        console.log('User added successfully: ', response);
+        console.log('User added/updated successfully: ', response);
 
-        this.message.set(`User "${response.firstName} ${response.lastName}" added successfully!`);
-        console.log('current user id after submit: ', this.currentUser.id);
+        if (this.currentUser.id == 0) {
+          this.message.set(`User "${response.firstName} ${response.lastName}" added successfully!`);
+        } else {
+          this.message.set(
+            `User "${response.firstName} ${response.lastName}" updated successfully!`,
+          );
+        }
 
         // When updating existing user, keep the form values on save, else reset the form for new user
         this.userForm.markAsPristine();

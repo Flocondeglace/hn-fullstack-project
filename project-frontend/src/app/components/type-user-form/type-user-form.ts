@@ -36,17 +36,22 @@ export class TypeUserForm implements OnInit {
   }
 
   ngOnInit(): void {
-    this.updateUniqueTypeNameValidator();
     this.route.params.subscribe((params) => {
       this.currentUserType.id = +params['id'] || 0;
-      this.userListTypeService.getUserType(this.currentUserType.id).subscribe((userType) => {
-        this.currentUserType = userType;
-
-        this.updateUniqueTypeNameValidator(this.currentUserType.typeName);
-        this.typeUserForm.patchValue({
-          typeName: this.currentUserType.typeName,
+      console.log('Current User Type ID: ', this.currentUserType.id);
+      if (this.currentUserType.id == 0) {
+        this.updateUniqueTypeNameValidator();
+        return;
+      } else {
+        this.userListTypeService.getUserType(this.currentUserType.id).subscribe((userType) => {
+          this.currentUserType = userType;
+          console.log('here');
+          this.updateUniqueTypeNameValidator(this.currentUserType.typeName);
+          this.typeUserForm.patchValue({
+            typeName: this.currentUserType.typeName,
+          });
         });
-      });
+      }
     });
   }
 

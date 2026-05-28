@@ -15,7 +15,7 @@ import { SortService } from '../../services/sort-service';
   styleUrl: './user-list.scss',
 })
 export class UserList implements OnInit {
-  sortType: WritableSignal<SortType> = signal<SortType>('id');
+  sortType: WritableSignal<SortType> = signal<SortType>('userTypeName');
   sortDirection: WritableSignal<SortDirection> = signal<SortDirection>('asc');
   users: WritableSignal<User[]> = signal<User[]>([]);
   typesMap: WritableSignal<Map<number, string>> = signal<Map<number, string>>(

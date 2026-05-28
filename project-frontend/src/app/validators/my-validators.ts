@@ -8,16 +8,9 @@ export class MyValidators {
     return null;
   }
 
+  // Check if current control value is unique (not in names) and is not the previous value (oldName) in case of update
   static uniqueValidator(names: string[], oldName?: string): ValidatorFn {
     return (control: AbstractControl<string>): ValidationErrors | null => {
-      console.log(
-        'Validating unique value: ',
-        control.value,
-        ' against names: ',
-        names,
-        ' oldName: ',
-        oldName,
-      );
       if (
         control.value != null &&
         control.value != oldName &&

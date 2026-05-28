@@ -2,50 +2,53 @@
 <button class="btn btn-primary m-2" routerLink="/user-form">Add an user</button>
 
 @if (users().length > 0) {
-  <table class="table table-striped table-hover mt-2 align-middle">
-    <thead class="table-primary align-middle">
-      <tr>
-        @for (v of cols_values; track $index) {
-          <th
-            class="col-2"
-            app-sortable
-            [sortType]="v"
-            [currentSortType]="sortType()"
-            [currentSortDirection]="sortDirection()"
-            name="{{ cols_names[$index] }}"
-            (click)="onSort(v)"
-          ></th>
-        }
-        <th class="col-2">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (tempUser of users(); track $index) {
-        <tr routerLink="/user-details/{{ tempUser.id }}" style="cursor: pointer">
+  <p class="text-info mt-3">Click on a row to see the user profile.</p>
+  <div class="overflow-scroll" style="max-height: 30em">
+    <table class="table table-striped table-hover mt-2 align-middle">
+      <thead class="table-primary align-middle">
+        <tr>
           @for (v of cols_values; track $index) {
-            <td>{{ getValue(tempUser, v) }}</td>
+            <th
+              class="col-2"
+              app-sortable
+              [sortType]="v"
+              [currentSortType]="sortType()"
+              [currentSortDirection]="sortDirection()"
+              name="{{ cols_names[$index] }}"
+              (click)="onSort(v)"
+            ></th>
           }
-          <td routerLink="/users" (click)="$event.stopPropagation()">
-            <div class="row">
-              <div class="m-1">
-                <button
-                  class="btn btn-sm btn-outline-primary"
-                  routerLink="/user-form/{{ tempUser.id }}"
-                >
-                  Edit
-                </button>
-              </div>
-              <div class="m-1">
-                <button class="btn btn-sm btn-outline-danger" (click)="removeUser(tempUser.id!)">
-                  Remove
-                </button>
-              </div>
-            </div>
-          </td>
+          <th class="col-2">Actions</th>
         </tr>
-      }
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        @for (tempUser of users(); track $index) {
+          <tr routerLink="/user-details/{{ tempUser.id }}" style="cursor: pointer">
+            @for (v of cols_values; track $index) {
+              <td>{{ getValue(tempUser, v) }}</td>
+            }
+            <td routerLink="/users" (click)="$event.stopPropagation()">
+              <div class="row">
+                <div class="m-1">
+                  <button
+                    class="btn btn-sm btn-outline-primary"
+                    routerLink="/user-form/{{ tempUser.id }}"
+                  >
+                    Edit
+                  </button>
+                </div>
+                <div class="m-1">
+                  <button class="btn btn-sm btn-outline-danger" (click)="removeUser(tempUser.id!)">
+                    Remove
+                  </button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 } @else {
   <p class="text-info">No user found. Add a new user to get started.</p>
 }

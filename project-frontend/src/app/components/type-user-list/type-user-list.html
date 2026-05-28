@@ -1,53 +1,55 @@
 <h2>Type user List</h2>
-<button class="btn btn-primary m-2" routerLink="/types-form">Add an User Type</button>
+<button class="btn btn-primary m-2" routerLink="/type-form">Add an User Type</button>
 @if (userTypes().length > 0) {
-  <table class="table table-striped mt-2 align-middle">
-    <thead class="table-primary align-middle">
-      <tr>
-        @for (v of cols_values; track $index) {
-          <th
-            class="col-2"
-            app-sortable
-            [sortType]="v"
-            [currentSortType]="sortType()"
-            [currentSortDirection]="sortDirection()"
-            name="{{ cols_names[$index] }}"
-            (click)="onSort(v)"
-          ></th>
-        }
-        <th class="col-2">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (tempType of userTypes(); track $index) {
+  <div class="overflow-scroll" style="max-height: 30em">
+    <table class="table table-striped mt-2 align-middle">
+      <thead class="table-primary align-middle">
         <tr>
           @for (v of cols_values; track $index) {
-            <td>{{ getValue(tempType, v) }}</td>
+            <th
+              class="col-2"
+              app-sortable
+              [sortType]="v"
+              [currentSortType]="sortType()"
+              [currentSortDirection]="sortDirection()"
+              name="{{ cols_names[$index] }}"
+              (click)="onSort(v)"
+            ></th>
           }
-          <td>
-            <div class="row">
-              <div class="col-sm-3">
-                <button
-                  class="btn btn-sm btn-outline-primary"
-                  routerLink="/types-form/{{ tempType.id }}"
-                >
-                  Edit
-                </button>
-              </div>
-              <div class="col-sm-3">
-                <button
-                  class="btn btn-sm btn-outline-danger"
-                  (click)="removeUserType(tempType.id!)"
-                >
-                  Remove
-                </button>
-              </div>
-            </div>
-          </td>
+          <th class="col-2">Actions</th>
         </tr>
-      }
-    </tbody>
-  </table>
+      </thead>
+      <tbody class="text-center">
+        @for (tempType of userTypes(); track $index) {
+          <tr>
+            @for (v of cols_values; track $index) {
+              <td>{{ getValue(tempType, v) }}</td>
+            }
+            <td>
+              <div class="row">
+                <div class="col-sm-6">
+                  <button
+                    class="btn btn-sm btn-outline-primary"
+                    routerLink="/type-form/{{ tempType.id }}"
+                  >
+                    Edit
+                  </button>
+                </div>
+                <div class="col-sm-6">
+                  <button
+                    class="btn btn-sm btn-outline-danger"
+                    (click)="removeUserType(tempType.id!)"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 } @else {
   <p class="text-info">No user type found. Add a new User Type to get started.</p>
 }

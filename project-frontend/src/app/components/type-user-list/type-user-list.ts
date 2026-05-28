@@ -27,21 +27,15 @@ export class TypeUserList implements OnInit {
 
   ngOnInit(): void {
     this.updateList();
-
-    this.route.params.subscribe((params) => {
-      console.log('Route params: ', params);
-      this.sortDirection.set(params['sortDirection'] || 'asc');
-      this.sortType.set(params['sortType'] || 'id');
-      this.sortBy();
-    });
   }
 
   updateList(): void {
     this.userListTypeService.getTypeUserList().subscribe((data) => {
       console.log(data);
       this.userTypes.set(data);
+
+      this.sortBy();
     });
-    this.sortBy();
   }
 
   getValue(userType: UserType, key: SortType): any {
