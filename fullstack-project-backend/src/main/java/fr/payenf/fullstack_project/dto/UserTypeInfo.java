@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 public class UserTypeInfo {
 
-    private Long id;
+    private int id;
     private String typeName;
 }

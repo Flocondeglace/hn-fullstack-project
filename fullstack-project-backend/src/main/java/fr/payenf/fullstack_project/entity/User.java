@@ -13,7 +13,7 @@ import org.hibernate.annotations.OnDeleteAction;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     @Column(name = "first_name")
     private String firstName;
@@ -27,4 +27,15 @@ public class User {
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinColumn(name = "type_id", nullable = true)
     private UserType userType;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", userType=" + userType +
+                '}';
+    }
 }

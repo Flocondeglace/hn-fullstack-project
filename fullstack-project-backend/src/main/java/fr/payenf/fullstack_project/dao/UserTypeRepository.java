@@ -6,7 +6,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource
-public interface UserTypeRepository extends JpaRepository<UserType, Long> {
+public interface UserTypeRepository extends JpaRepository<UserType, Integer> {
 
     UserType findByTypeName(@Param("typeName") String typeName);
 }

@@ -6,18 +6,20 @@ import fr.payenf.fullstack_project.dto.UserInfo;
 import fr.payenf.fullstack_project.dto.UserTypeInfo;
 import fr.payenf.fullstack_project.entity.User;
 import fr.payenf.fullstack_project.entity.UserType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService{
 
-    private UserRepository userRepository;
-    private UserTypeRepository userTypeRepository;
+    private static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
+    private final UserRepository userRepository;
+    private final UserTypeRepository userTypeRepository;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,  UserTypeRepository userTypeRepository) {
@@ -25,6 +27,9 @@ public class UserServiceImpl implements UserService{
         this.userTypeRepository = userTypeRepository;
     }
 
+    /*
+        Create a dto corresponding to user based on the user in db
+     */
     private UserInfo userToUserInfo(User user) {
         UserInfo userInfo = new UserInfo();
         userInfo.setId(user.getId());
@@ -38,9 +43,26 @@ public class UserServiceImpl implements UserService{
         return userInfo;
     }
 
+    /*
+        Create an user based on the dto corresponding to user
+        Use UserInfo.id to find the corresponding UserType in db (UserInfo.userTypeName not used)
+     */
+    private User userInfoToUser(UserInfo userInfo) {
+
+        logger.info("Trying to save user : {}", userInfo);
+        User user = this.userRepository.findById(userInfo.getId()).orElse(new User());
+        user.setFirstName(userInfo.getFirstName());
+        user.setLastName(userInfo.getLastName());
+        user.setEmail(userInfo.getEmail());
+        UserType userType = this.userTypeRepository.findById(userInfo.getUserTypeId()).orElse(null);
+        user.setUserType(userType);
+        return user;
+    }
+
     @Override
-    public UserInfo getUser(long id) {
-        User user = this.userRepository.getReferenceById(id);
+    public UserInfo getUser(int id) {
+        User user = this.userRepository.findById(id).orElse(new User());
+        logger.info("Get user by id {} : {}", id, user);
         return userToUserInfo(user);
     }
 
@@ -56,39 +78,34 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User saveUser(UserInfo userInfo) {
-        System.out.println("Saving user" +  userInfo);
-        User user = new User();
-        if (userInfo.getId() != null) {
-            user = this.userRepository.findById(userInfo.getId()).orElse(new User());
-        }
-        user.setFirstName(userInfo.getFirstName());
-        user.setLastName(userInfo.getLastName());
-        user.setEmail(userInfo.getEmail());
-        UserType userType = null;
-        if (userInfo.getUserTypeId() != null) {
-            userType = this.userTypeRepository.findById(userInfo.getUserTypeId()).orElse(null);
-        }
-        user.setUserType(userType);
-        System.out.println("Saving " +  userType);
-        return  this.userRepository.save(user);
+        User user = this.userInfoToUser(userInfo);
+        this.userRepository.save(user);
+        logger.info("SUCCESS: Saving user {}", user);
+        return user;
     }
 
     @Override
-    public void removeUser(long id) {
+    public boolean removeUser(int id) {
         Optional<User> userOpt = this.userRepository.findById(id);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
-            System.out.println("Removing UserType " + id);
+
             UserType userType = user.getUserType();
-            if (userType != null) {
+            /*if (userType != null) {
                 userType.getUsers().remove(user);
-            }
+            }*/
 
             userRepository.save(user);
 
             this.userRepository.deleteById(id);
+            logger.info("SUCCESS: User {} has been removed", id);
+            if (userType != null) {
+                userType.getUsers();
+            }
+            return true;
         } else {
-            System.out.println("UserType with " + id + " not found");
+            logger.warn("User with id {} not found", id);
+            return false;
         }
     }
 
@@ -97,12 +114,9 @@ public class UserServiceImpl implements UserService{
         UserType userType;
 
         // if id set, update the corresponding userType in the db
-        if (userTypeInfo.getId() != null) {
-            Optional<UserType> userTypeDb = this.userTypeRepository.findById(userTypeInfo.getId());
+
+        Optional<UserType> userTypeDb = this.userTypeRepository.findById(userTypeInfo.getId());
             userType =  userTypeDb.orElse(new UserType());
-        } else {
-            userType = new UserType();
-        }
 
         userType.setTypeName(userTypeInfo.getTypeName());
         System.out.println("Saving UserType " + userType);
@@ -117,7 +131,7 @@ public class UserServiceImpl implements UserService{
 
     @Transactional
     @Override
-    public void removeUserType(long id) {
+    public void removeUserType(int id) {
         Optional<UserType> userTypeOpt = this.userTypeRepository.findById(id);
         if (userTypeOpt.isPresent()) {
             UserType userType = userTypeOpt.get();

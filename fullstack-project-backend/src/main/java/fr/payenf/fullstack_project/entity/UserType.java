@@ -14,7 +14,7 @@ import java.util.Set;
 public class UserType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     @Column(name="type_name")
     private String typeName;

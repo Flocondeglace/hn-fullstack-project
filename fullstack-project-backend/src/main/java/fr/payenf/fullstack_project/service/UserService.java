@@ -9,11 +9,11 @@ import java.util.Set;
 
 public interface UserService {
 
-    UserInfo getUser(long id);
+    UserInfo getUser(int id);
     Set<UserInfo> getAllUsers();
     User saveUser(UserInfo userInfo);
-    void removeUser(long id);
+    boolean removeUser(int id);
     UserType saveUserType(UserTypeInfo userTypeInfo);
-    void removeUserType(long id);
+    void removeUserType(int id);
 
 }

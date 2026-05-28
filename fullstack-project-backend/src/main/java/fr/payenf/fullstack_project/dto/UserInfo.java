@@ -4,10 +4,10 @@ import lombok.Data;
 
 @Data
 public class UserInfo {
-    private Long id;
+    private int id;
     private String firstName;
     private String lastName;
     private String email;
-    private Long userTypeId;
+    private int userTypeId;
     private String userTypeName;
 }
