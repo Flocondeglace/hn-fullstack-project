@@ -30,6 +30,7 @@ public class UserServiceImpl implements UserService{
         userInfo.setId(user.getId());
         if (user.getUserType() != null) {
             userInfo.setUserTypeId(user.getUserType().getId());
+            userInfo.setUserTypeName(user.getUserType().getTypeName());
         }
         userInfo.setEmail(user.getEmail());
         userInfo.setFirstName(user.getFirstName());

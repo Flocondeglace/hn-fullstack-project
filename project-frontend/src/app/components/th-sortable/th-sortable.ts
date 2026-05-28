@@ -1,9 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
+import { SortDirection, SortType } from '../../common/sort';
 
 @Component({
-  selector: 'app-th-sortable',
+  selector: 'th[app-sortable]',
   imports: [],
   templateUrl: './th-sortable.html',
   styleUrl: './th-sortable.scss',
 })
-export class ThSortable {}
+export class ThSortable {
+  currentSortDirection = input.required<SortDirection>();
+  currentSortType = input.required<SortType>();
+  sortType = input.required<SortType>();
+  name = input.required<string>();
+}

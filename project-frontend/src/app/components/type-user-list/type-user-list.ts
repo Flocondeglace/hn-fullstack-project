@@ -2,13 +2,13 @@ import { Component, OnInit, signal, WritableSignal } from '@angular/core';
 import { UserListTypeService } from '../../services/user-list-type-service';
 import { UserType } from '../../common/user-type';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-
-export type SortType = 'id' | 'typeName';
-export type SortDirection = 'asc' | 'desc';
+import { SortService } from '../../services/sort-service';
+import { SortDirection, SortType } from '../../common/sort';
+import { ThSortable } from '../th-sortable/th-sortable';
 
 @Component({
   selector: 'app-type-user-list',
-  imports: [RouterLink],
+  imports: [RouterLink, ThSortable],
   templateUrl: './type-user-list.html',
   styleUrl: './type-user-list.scss',
 })
@@ -16,9 +16,12 @@ export class TypeUserList implements OnInit {
   sortType: WritableSignal<SortType> = signal<SortType>('id');
   sortDirection: WritableSignal<SortDirection> = signal<SortDirection>('asc');
   userTypes: WritableSignal<UserType[]> = signal<UserType[]>([]);
+  cols_values: SortType[] = ['id', 'typeName'];
+  cols_names: string[] = ['ID', 'User Type'];
 
   constructor(
     private userListTypeService: UserListTypeService,
+    private sortService: SortService,
     private route: ActivatedRoute,
   ) {}
 
@@ -41,6 +44,10 @@ export class TypeUserList implements OnInit {
     this.sortBy();
   }
 
+  getValue(userType: UserType, key: SortType): any {
+    return userType[key as keyof UserType];
+  }
+
   removeUserType(id: number): void {
     this.userListTypeService.removeUserType(id).subscribe((data) => {
       console.log(data);
@@ -49,25 +56,20 @@ export class TypeUserList implements OnInit {
   }
 
   onSort(type: SortType) {
-    if (this.sortType() === type) {
-      this.sortDirection.set(this.sortDirection() === 'asc' ? 'desc' : 'asc');
-    } else {
-      this.sortType.set(type);
-      this.sortDirection.set('asc');
-    }
+    const { sortType, sortDirection } = this.sortService.onSort(
+      type,
+      this.sortType(),
+      this.sortDirection(),
+    );
+    this.sortType.set(sortType);
+    this.sortDirection.set(sortDirection);
     this.sortBy();
   }
 
   private sortBy() {
     console.log('Sorting by: ', this.sortType(), 'Direction: ', this.sortDirection());
-    let sortedTypes = [...this.userTypes()];
-    const direction = this.sortDirection() === 'asc' ? 1 : -1;
-    if (this.sortType() === 'typeName') {
-      sortedTypes.sort((a, b) => a.typeName!.localeCompare(b.typeName!) * direction);
-    } else {
-      sortedTypes.sort((a, b) => (a.id! - b.id!) * direction);
-    }
-    this.userTypes.set(sortedTypes);
-    console.log('Sorted user types: ', this.userTypes());
+    this.userTypes.set(
+      this.sortService.sortBy(this.sortType(), this.sortDirection(), this.userTypes()),
+    );
   }
 }

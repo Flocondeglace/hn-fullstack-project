@@ -3,13 +3,14 @@ import { User } from '../../common/user';
 import { UserListService } from '../../services/user-list-service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { UserListTypeService } from '../../services/user-list-type-service';
-
-export type SortType = 'id' | 'firstName' | 'lastName' | 'email' | 'userType';
-export type SortDirection = 'asc' | 'desc';
+import { ThSortable } from '../th-sortable/th-sortable';
+import type { SortType, SortDirection } from '../../common/sort';
+import { SortTypeEnum } from '../../common/sort';
+import { SortService } from '../../services/sort-service';
 
 @Component({
   selector: 'app-user-list',
-  imports: [RouterLink],
+  imports: [RouterLink, ThSortable],
   templateUrl: './user-list.html',
   styleUrl: './user-list.scss',
 })
@@ -21,9 +22,13 @@ export class UserList implements OnInit {
     new Map<number, string>(),
   );
 
+  cols_values: SortType[] = ['userTypeName', 'firstName', 'lastName', 'email'];
+  cols_names: string[] = ['User Type', 'First Name', 'Last Name', 'Email'];
+
   constructor(
     private userListService: UserListService,
     private userListTypeService: UserListTypeService,
+    private sortService: SortService,
     private route: ActivatedRoute,
   ) {}
 
@@ -43,7 +48,11 @@ export class UserList implements OnInit {
       console.log(data);
       this.users.set(data);
     });
-    //this.sortBy();
+    this.sortBy();
+  }
+
+  getValue(user: User, key: SortType): any {
+    return user[key as keyof User];
   }
 
   removeUser(id: number): void {
@@ -53,5 +62,19 @@ export class UserList implements OnInit {
     });
   }
 
-  onSort(type: SortType) {}
+  onSort(type: SortType) {
+    const { sortType, sortDirection } = this.sortService.onSort(
+      type,
+      this.sortType(),
+      this.sortDirection(),
+    );
+    this.sortType.set(sortType);
+    this.sortDirection.set(sortDirection);
+    this.sortBy();
+  }
+
+  private sortBy() {
+    console.log('Sorting by: ', this.sortType(), 'Direction: ', this.sortDirection());
+    this.users.set(this.sortService.sortBy(this.sortType(), this.sortDirection(), this.users()));
+  }
 }

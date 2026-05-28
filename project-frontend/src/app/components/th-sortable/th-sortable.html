@@ -1,1 +1,10 @@
-<p>th-sortable works!</p>
+<button class="btn border m-1">
+  @if (sortType() === currentSortType()) {
+    @if (currentSortDirection() === 'asc') {
+      <i class="fa-solid fa-arrow-down-short-wide"></i>
+    } @else if (currentSortDirection() === 'desc') {
+      <i class="fa-solid fa-arrow-up-short-wide"></i>
+    }
+  }
+  {{ name() }}
+</button>

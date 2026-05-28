@@ -6,4 +6,5 @@ export class User {
   lastName?: string;
   email?: string;
   userTypeId?: number;
+  userTypeName?: string;
 }
