@@ -8,9 +8,9 @@ Project then available at :
 
 ## Backend path exposed
 
-GET `http://localhost:8090/api/user-list`
-GET `http://localhost:8090/api/type-list`
-POST `http://localhost:8090/api/create-user`
-POST `http://localhost:8090/api/create-type`
+GET `http://localhost:8090/api/user-list`  
+GET `http://localhost:8090/api/type-list`  
+POST `http://localhost:8090/api/create-user`  
+POST `http://localhost:8090/api/create-type`  
 
 create-user and create-type can update object already in database if id is given
