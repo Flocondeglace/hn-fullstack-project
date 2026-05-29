@@ -16,6 +16,7 @@ public class DataRestConfig implements RepositoryRestConfigurer {
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors) {
         config.exposeIdsFor(UserType.class, User.class);
-        cors.addMapping(config.getBasePath()+"/**").allowedOrigins(allowedOrigins);
+        // Not usefull : I only used the UserController exposed path
+        // cors.addMapping(config.getBasePath()+"/**").allowedOrigins(allowedOrigins);
     }
 }

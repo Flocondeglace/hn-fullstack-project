@@ -8,16 +8,13 @@ import { UserListTypeService } from '../../services/user-list-type-service';
   selector: 'app-user-details',
   imports: [RouterLink],
   templateUrl: './user-details.html',
-  styleUrl: './user-details.scss',
 })
 export class UserDetails implements OnInit {
   user: WritableSignal<User> = signal(new User());
-  userTypeName: WritableSignal<string> = signal('');
 
   constructor(
     private route: ActivatedRoute,
     private userListService: UserListService,
-    private userListTypeService: UserListTypeService,
   ) {}
 
   ngOnInit(): void {
@@ -26,9 +23,6 @@ export class UserDetails implements OnInit {
       this.userListService.getUser(userId).subscribe((user) => {
         this.user.set(user);
         console.info('User details: ', user);
-        this.userListTypeService.getUserType(user.userTypeId!).subscribe((userType) => {
-          this.userTypeName.set(userType.typeName || '');
-        });
       });
     });
   }

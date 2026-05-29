@@ -5,7 +5,6 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { UserListTypeService } from '../../services/user-list-type-service';
 import { ThSortable } from '../th-sortable/th-sortable';
 import type { SortType, SortDirection } from '../../common/sort';
-import { SortTypeEnum } from '../../common/sort';
 import { SortService } from '../../services/sort-service';
 
 @Component({

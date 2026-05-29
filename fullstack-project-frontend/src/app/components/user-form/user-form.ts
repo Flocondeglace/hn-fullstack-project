@@ -61,11 +61,13 @@ export class UserForm implements OnInit {
   }
 
   ngOnInit(): void {
+    // Get User Types to fill select options in form
     this.userListTypeService.getTypeUserList().subscribe((types) => {
       this.userTypes.set(types);
       console.info('User types loaded: ', this.userTypes());
     });
 
+    // Load user in form to edit if id in path
     this.route.params.subscribe((params) => {
       this.currentUser.id = +params['id'] || 0;
       this.userListService.getUser(this.currentUser.id).subscribe((user) => {
@@ -124,6 +126,7 @@ export class UserForm implements OnInit {
     this.updateUniqueMailValidator();
   }
 
+  // Update the validator for unique email with current list of users and the previous email (in case of edit, to allow keeping the same email)
   updateUniqueMailValidator(previousEmail?: string) {
     this.userListService.getUserList().subscribe((data) => {
       let emailUsed = data.map((user) => user.email || '');

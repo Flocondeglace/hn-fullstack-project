@@ -16,7 +16,7 @@ import java.util.*;
 @Service
 public class UserServiceImpl implements UserService{
 
-    private static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final UserRepository userRepository;
     private final UserTypeRepository userTypeRepository;
@@ -61,7 +61,11 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserInfo getUser(int id) {
-        User user = this.userRepository.findById(id).orElse(new User());
+        User user = this.userRepository.findById(id).orElse(null);
+        if (user == null) {
+            logger.warn("User with id {} not found", id);
+            return null;
+        }
         logger.info("Get user by id {} : {}", id, user);
         return userToUserInfo(user);
     }
@@ -76,32 +80,31 @@ public class UserServiceImpl implements UserService{
         return userInfos;
     }
 
+    @Transactional
     @Override
     public User saveUser(UserInfo userInfo) {
+        // Check if email not already used
+        List<User> userTypeList = this.userRepository.findAll();
+        for (User user: userTypeList) {
+            if (!Objects.equals(user.getId(), userInfo.getId()) && Objects.equals(user.getEmail(), userInfo.getEmail())){
+                // email already used
+                logger.info("User with email {} already exists", userInfo.getEmail());
+                return null;
+            }
+        }
         User user = this.userInfoToUser(userInfo);
         this.userRepository.save(user);
         logger.info("SUCCESS: Saving user {}", user);
         return user;
     }
 
+    @Transactional
     @Override
     public boolean removeUser(int id) {
         Optional<User> userOpt = this.userRepository.findById(id);
         if (userOpt.isPresent()) {
-            User user = userOpt.get();
-
-            UserType userType = user.getUserType();
-            /*if (userType != null) {
-                userType.getUsers().remove(user);
-            }*/
-
-            userRepository.save(user);
-
             this.userRepository.deleteById(id);
             logger.info("SUCCESS: User {} has been removed", id);
-            if (userType != null) {
-                userType.getUsers();
-            }
             return true;
         } else {
             logger.warn("User with id {} not found", id);
@@ -110,23 +113,45 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserType saveUserType(UserTypeInfo userTypeInfo) {
-        UserType userType;
-
-        // if id set, update the corresponding userType in the db
-
-        Optional<UserType> userTypeDb = this.userTypeRepository.findById(userTypeInfo.getId());
-            userType =  userTypeDb.orElse(new UserType());
-
-        userType.setTypeName(userTypeInfo.getTypeName());
-        System.out.println("Saving UserType " + userType);
-        // this.userTypeRepository.findByTypeName(userTypeInfo.getTypeName())
-        try {
-            UserType savedUserType = this.userTypeRepository.save(userType);
-            return savedUserType;
-        } catch (RuntimeException e) {
+    public UserTypeInfo getUserType(int id) {
+        UserType userType = this.userTypeRepository.findById(id).orElse(null);
+        if (userType == null) {
+            logger.warn("UserType with id {} not found", id);
             return null;
         }
+        UserTypeInfo userTypeInfo = new UserTypeInfo();
+        userTypeInfo.setId(userType.getId());
+        userTypeInfo.setTypeName(userType.getTypeName());
+        return userTypeInfo;
+    }
+
+
+    @Override
+    public List<UserType> getAllUserTypes() {
+        return this.userTypeRepository.findAll();
+    }
+
+
+    @Transactional
+    @Override
+    public UserType saveUserType(UserTypeInfo userTypeInfo) {
+
+        // Check if name not already used
+        List<UserType> userTypeList = this.userTypeRepository.findAll();
+        for (UserType type: userTypeList) {
+            if (!Objects.equals(type.getId(), userTypeInfo.getId()) && Objects.equals(type.getTypeName(), userTypeInfo.getTypeName())){
+                // name already used
+                logger.info("UserType with name {} already exists", userTypeInfo.getTypeName());
+                return null;
+            }
+        }
+
+        // if id not set to 0, update the corresponding userType in the db, else create a new one
+        UserType userTypeDb = this.userTypeRepository.findById(userTypeInfo.getId()).orElse(new UserType());
+        userTypeDb.setTypeName(userTypeInfo.getTypeName());
+
+        logger.info("Successfully save user type {}", userTypeDb);
+        return this.userTypeRepository.save(userTypeDb);
     }
 
     @Transactional
@@ -135,7 +160,6 @@ public class UserServiceImpl implements UserService{
         Optional<UserType> userTypeOpt = this.userTypeRepository.findById(id);
         if (userTypeOpt.isPresent()) {
             UserType userType = userTypeOpt.get();
-            System.out.println("Removing UserType " + id);
 
             List<User> users = new ArrayList<>(userType.getUsers());
             userType.getUsers().clear();
@@ -145,8 +169,9 @@ public class UserServiceImpl implements UserService{
             userRepository.saveAll(users);
 
             this.userTypeRepository.deleteById(id);
+            logger.info("Successfully delete user type {}", id);
         } else {
-            System.out.println("UserType with " + id + " not found");
+            logger.warn("User with id {} not found", id);
         }
     }
 }

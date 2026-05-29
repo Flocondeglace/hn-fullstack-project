@@ -28,7 +28,7 @@ services:
         condition: service_healthy
 
   frontend:
-    build: project-frontend/.
+    build: fullstack-project-frontend/.
     ports:
       - "4200:4200"
     depends_on:

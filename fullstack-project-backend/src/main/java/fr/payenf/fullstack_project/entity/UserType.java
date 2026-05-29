@@ -2,15 +2,15 @@ package fr.payenf.fullstack_project.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Set;
 
 @Entity
 @Table(name="user_type")
-@Data
+@Getter
+@Setter
 public class UserType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

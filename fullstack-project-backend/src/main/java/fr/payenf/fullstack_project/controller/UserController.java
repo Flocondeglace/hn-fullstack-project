@@ -1,6 +1,5 @@
 package fr.payenf.fullstack_project.controller;
 
-import fr.payenf.fullstack_project.dao.UserRepository;
 import fr.payenf.fullstack_project.dto.UserInfo;
 import fr.payenf.fullstack_project.dto.UserTypeInfo;
 import fr.payenf.fullstack_project.entity.User;
@@ -8,8 +7,6 @@ import fr.payenf.fullstack_project.entity.UserType;
 import fr.payenf.fullstack_project.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,10 +17,9 @@ import java.util.Set;
 @RequestMapping("/api")
 public class UserController {
 
-    private Logger logger = LoggerFactory.getLogger(UserController.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class.getName());
 
-
-    private UserService userService;
+    private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -31,7 +27,11 @@ public class UserController {
 
     @GetMapping("/get-user/{id}")
     public ResponseEntity<UserInfo> getUser(@PathVariable int id) {
-        return ResponseEntity.ok(userService.getUser(id));
+        UserInfo userInfo = userService.getUser(id);
+        if (userInfo == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(userInfo);
     }
 
 
@@ -62,15 +62,31 @@ public class UserController {
         }
     }
 
+    @GetMapping("/get-type/{id}")
+    public ResponseEntity<UserTypeInfo> getUserType(@PathVariable int id) {
+        UserTypeInfo userTypeInfo = userService.getUserType(id);
+        if (userTypeInfo == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(userTypeInfo);
+    }
+
+
+    @GetMapping("/type-list")
+    public ResponseEntity<List<UserType>> getAllUserTypes() {
+        return ResponseEntity.ok(userService.getAllUserTypes());
+    }
+
+
     @PostMapping("/create-type")
-    public ResponseEntity<UserType> createType(@RequestBody UserTypeInfo userType){
-        logger.info("Trying to save user type : {}", userType);
-        UserType userTypeDb = userService.saveUserType(userType);
+    public ResponseEntity<UserType> createType(@RequestBody UserTypeInfo userTypeInfo){
+        logger.info("Trying to save user type : {}", userTypeInfo);
+        UserType userTypeDb = userService.saveUserType(userTypeInfo);
         if (userTypeDb == null){
-            logger.warn("Bad Request");
+            logger.warn("Bad Request, tried to add : {}", userTypeInfo);
             return ResponseEntity.badRequest().build();
         }
-        System.out.println(userTypeDb);
+        logger.info("UserType saved : {}", userTypeDb);
         return ResponseEntity.ok(userTypeDb);
     }
 

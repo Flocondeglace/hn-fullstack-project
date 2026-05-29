@@ -8,7 +8,9 @@ import { environment } from '../../environments/environment.development';
   providedIn: 'root',
 })
 export class UserListTypeService {
-  private typeListUrl = `${environment.apiUrl}/userTypes`;
+  private typeListUrl = `${environment.apiUrl}/type-list`;
+
+  private getTypeUrl = `${environment.apiUrl}/get-type`;
 
   private addTypeUrl = `${environment.apiUrl}/create-type`;
 
@@ -17,13 +19,11 @@ export class UserListTypeService {
   constructor(private httpClient: HttpClient) {}
 
   getTypeUserList(): Observable<UserType[]> {
-    return this.httpClient
-      .get<GetResponseTypeUsers>(this.typeListUrl)
-      .pipe(map((response) => response._embedded.userTypes));
+    return this.httpClient.get<UserType[]>(this.typeListUrl);
   }
 
   getUserType(id: number): Observable<UserType> {
-    const url = `${this.typeListUrl}/${id}`;
+    const url = `${this.getTypeUrl}/${id}`;
     return this.httpClient.get<UserType>(url);
   }
 
@@ -35,10 +35,4 @@ export class UserListTypeService {
     const url = `${this.deleteTypeUrl}/${id}`;
     return this.httpClient.delete<UserType>(url);
   }
-}
-
-interface GetResponseTypeUsers {
-  _embedded: {
-    userTypes: UserType[];
-  };
 }

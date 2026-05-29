@@ -12,8 +12,7 @@ import { MessageErrors } from '../form/message-errors/message-errors';
   templateUrl: './type-user-form.html',
 })
 export class TypeUserForm implements OnInit {
-  nameUsed: string[] = [];
-
+  // Form for user type
   typeUserForm: FormGroup = new FormGroup({
     typeName: new FormControl('', [
       Validators.required,
@@ -22,7 +21,13 @@ export class TypeUserForm implements OnInit {
     ]),
   });
 
+  // List of user types to check for unique name validation
+  nameUsed: string[] = [];
+
+  // Current user type being edited
   currentUserType: UserType = new UserType();
+
+  // Message to display after form submission (success or error)
   message: WritableSignal<string> = signal('');
 
   constructor(
@@ -35,6 +40,7 @@ export class TypeUserForm implements OnInit {
   }
 
   ngOnInit(): void {
+    // Load user type in form to edit if id in path
     this.route.params.subscribe((params) => {
       this.currentUserType.id = +params['id'] || 0;
       console.info('Current User Type ID: ', this.currentUserType.id, ' (0 means new user type)');
@@ -44,6 +50,7 @@ export class TypeUserForm implements OnInit {
       } else {
         this.userListTypeService.getUserType(this.currentUserType.id).subscribe((userType) => {
           this.currentUserType = userType;
+          console.info('Loading form with User Type : ', this.currentUserType);
           this.updateUniqueTypeNameValidator(this.currentUserType.typeName);
           this.typeUserForm.patchValue({
             typeName: this.currentUserType.typeName,
@@ -81,6 +88,7 @@ export class TypeUserForm implements OnInit {
     this.updateUniqueTypeNameValidator();
   }
 
+  // Update the validator for unique type name with current list of user types and the previous name (in case of edit, to allow keeping the same name)
   updateUniqueTypeNameValidator(previousName?: string) {
     this.userListTypeService.getTypeUserList().subscribe((data) => {
       this.nameUsed = data.map((type) => type.typeName || '');

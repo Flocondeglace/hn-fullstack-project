@@ -6,6 +6,7 @@ import { User } from '../common/user';
   providedIn: 'root',
 })
 export class SortService {
+  // Return new sort type/direction based on previous ones and the column clicked
   updateSortParameters(
     type: SortType,
     currentSortType: SortType,
@@ -21,6 +22,7 @@ export class SortService {
     return { sortType: newSortType, sortDirection: newSortDirection };
   }
 
+  // Sort an array of User or UserType based on sort type and direction
   sortBy(sortType: SortType, sortDirection: SortDirection, toSort: any[]): any[] {
     console.info('Sorting by:', sortType, ', Direction: ', sortDirection);
     let sortedValues = [...toSort];

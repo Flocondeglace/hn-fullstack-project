@@ -1,7 +1,7 @@
 import { Component, OnInit, signal, WritableSignal } from '@angular/core';
 import { UserListTypeService } from '../../services/user-list-type-service';
 import { UserType } from '../../common/user-type';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { SortService } from '../../services/sort-service';
 import { SortDirection, SortType } from '../../common/sort';
 import { ThSortable } from '../th-sortable/th-sortable';
@@ -21,7 +21,6 @@ export class TypeUserList implements OnInit {
   constructor(
     private userListTypeService: UserListTypeService,
     private sortService: SortService,
-    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
@@ -42,8 +41,8 @@ export class TypeUserList implements OnInit {
   }
 
   removeUserType(id: number): void {
-    this.userListTypeService.removeUserType(id).subscribe((data) => {
-      console.info('User type removed successfully: ', data);
+    this.userListTypeService.removeUserType(id).subscribe(() => {
+      console.info('User type removed successfully: ', id);
       this.updateList();
     });
   }

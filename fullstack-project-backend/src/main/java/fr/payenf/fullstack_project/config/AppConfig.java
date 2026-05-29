@@ -14,6 +14,7 @@ public class AppConfig implements WebMvcConfigurer {
     @Value("${allowed.origins}")
     private String[] allowedOrigins;
 
+    // Allow origin from fronted to path exposed in UserController
     @Override
     public void addCorsMappings(CorsRegistry cors){
         cors.addMapping(basePath+"/**").allowedOrigins(allowedOrigins).allowedMethods("GET","POST","PUT","DELETE","OPTIONS");
